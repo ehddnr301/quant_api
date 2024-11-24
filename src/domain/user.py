@@ -2,12 +2,8 @@ from typing import Optional
 from datetime import datetime
 
 from sqlmodel import SQLModel, Field
-from pytz import timezone
 
-
-def kst_now():
-    """Get the current time in KST."""
-    return datetime.now(timezone("Asia/Seoul"))
+from .utils import kst_now
 
 
 class User(SQLModel, table=True):  # table=True로 데이터베이스 테이블 생성

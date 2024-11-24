@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
-from src.domain.user import User
+from src.domain import User
 from src.services import UserService
-from src.repository.user_repository import UserRepository
+from src.repository import UserRepository
 from src.core import get_session  # DB 세션 의존성 주입
 
 router = APIRouter()

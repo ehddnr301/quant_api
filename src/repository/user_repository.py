@@ -1,6 +1,6 @@
 from typing import Optional, List
 from sqlmodel import Session, select
-from src.domain.user import User
+from src.domain import User
 
 
 class UserRepository:
