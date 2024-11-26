@@ -8,15 +8,22 @@ class AssetRepository:
         self.session = session
 
     def get_user_assets_by_id(self, user_id: int) -> Optional[Asset]:
-        statement = select(Asset).where(Asset.user_id == user_id)
-        return self.session.exec(statement).all()
+        with self.session() as session:
+            statement = select(Asset).where(Asset.user_id == user_id)
+            assets = session.exec(statement).all()
+            return [Asset.model_validate(asset) for asset in assets]
 
     def get_all_assets(self) -> List[Asset]:
-        statement = select(Asset)
-        return self.session.exec(statement).all()
+        with self.session() as session:
+            statement = select(Asset)
+            return [
+                Asset.model_validate(asset) for asset in session.exec(statement).all()
+            ]
 
     def add_asset(self, asset: Asset) -> Asset:
-        self.session.add(asset)
-        self.session.commit()
-        self.session.refresh(asset)
-        return asset
+        with self.session() as session:
+            db_asset = Asset.model_validate(asset)
+            session.add(db_asset)
+            session.commit()
+            session.refresh(db_asset)
+            return db_asset

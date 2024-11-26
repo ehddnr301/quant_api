@@ -8,17 +8,24 @@ class TransactionRepository:
         self.session = session
 
     def get_transaction_by_id(self, transaction_id: int) -> Optional[Transaction]:
-        statement = select(Transaction).where(
-            Transaction.transaction_id == transaction_id
-        )
-        return self.session.exec(statement).first()
+        with self.session() as session:
+            statement = select(Transaction).where(
+                Transaction.transaction_id == transaction_id
+            )
+            transaction = session.exec(statement).first()
+            return Transaction.model_validate(transaction)
 
     def get_all_transactions(self) -> List[Transaction]:
-        statement = select(Transaction)
-        return self.session.exec(statement).all()
+        with self.session() as session:
+            statement = select(Transaction)
+            return [
+                Transaction.model_validate(t) for t in session.exec(statement).all()
+            ]
 
     def add_transaction(self, transaction: Transaction) -> Transaction:
-        self.session.add(transaction)
-        self.session.commit()
-        self.session.refresh(transaction)
-        return transaction
+        with self.session() as session:
+            db_transaction = Transaction.model_validate(transaction)
+            session.add(db_transaction)
+            session.commit()
+            session.refresh(db_transaction)
+            return db_transaction

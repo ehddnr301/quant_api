@@ -4,8 +4,8 @@ from src.repository import LimitRepository
 
 
 class LimitService:
-    def __init__(self, limit_repository: LimitRepository):
-        self.limit_repository = limit_repository
+    def __init__(self, repository: LimitRepository):
+        self.limit_repository = repository
 
     def get_limit(self, user_id: int) -> Optional[Limit]:
         return self.limit_repository.get_limit_by_user_id(user_id)

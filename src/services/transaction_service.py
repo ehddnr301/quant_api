@@ -4,8 +4,8 @@ from src.repository import TransactionRepository
 
 
 class TransactionService:
-    def __init__(self, transaction_repository: TransactionRepository):
-        self.transaction_repository = transaction_repository
+    def __init__(self, repository: TransactionRepository):
+        self.transaction_repository = repository
 
     def get_transaction(self, transaction_id: int) -> Optional[Transaction]:
         return self.transaction_repository.get_transaction_by_id(transaction_id)

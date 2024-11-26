@@ -1,19 +1,22 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
 
-from src.core import Database, create_db_and_tables, get_session
+from src.core import Database
 from src.api import router as api_router
-
-database = Database()
+from src.containers import Container
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    create_db_and_tables()
+    database = Database()
+    database.create_database()
+
+    container = Container()
+    app.container = container
     yield
 
 
 app = FastAPI(lifespan=lifespan)
 
-app.include_router(api_router, prefix="/api/v1", dependencies=[Depends(get_session)])
+app.include_router(api_router, prefix="/api/v1")

@@ -4,16 +4,18 @@ from src.repository import UserRepository
 
 
 class UserService:
-    def __init__(self, user_repository: UserRepository):
-        self.user_repository = user_repository
+    def __init__(self, repository: UserRepository):
+        self.user_repository = repository
 
     def get_user(self, user_id: int) -> Optional[User]:
         return self.user_repository.get_user_by_id(user_id)
 
-    def list_users(self) -> List[User]:
-        return self.user_repository.get_all_users()
+    def list_users(self) -> List[Optional[User]]:
+        users = self.user_repository.get_all_users()
+        return users
 
     def create_user(self, user: User) -> User:
-        # if "@" not in user.email:
-        #     raise ValueError("Invalid email address")
         return self.user_repository.add_user(user)
+
+    def get_user_by_name(self, name: str) -> Optional[User]:
+        return self.user_repository.get_user_by_name(name)
